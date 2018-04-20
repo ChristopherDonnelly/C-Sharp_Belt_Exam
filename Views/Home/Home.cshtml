@@ -22,7 +22,7 @@
                     if(@activity.EventDate > DateTime.Now){
                         <tr>
                             <td class="align-middle"><a href="/ActivityDetails/@activity.ActivityId" class="btn btn-dark">@activity.Title</a></td>
-                            <td class="align-middle">@activity.EventDate.ToString("M/dd") @@ @activity.EventTime.ToString("HH:mmtt")</td>
+                            <td class="align-middle">@activity.EventDate.ToString("M/dd") @@ @activity.EventTime.ToString("h:mmtt")</td>
                             <td class="align-middle">@activity.Duration @activity.DurationLength</td>
                             <td class="align-middle">@activity.CreatedBy.FirstName</td>
                             <td class="align-middle">@activity.JoinedUsers.Count</td>
