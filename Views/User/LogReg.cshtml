@@ -1,0 +1,15 @@
+@model C_Sharp_Belt.Models.LogRegBundleModel
+
+@{
+    ViewData["Title"] = "Login/Registration";
+}
+
+<div class="row">
+    <h1 class="pt-5 text-center">Welcome to the Dojo Activity Center</h1>
+    <div class="col-6">
+        @Html.Partial("Login", @Model.Login)
+    </div>
+    <div class="col-6">
+        @Html.Partial("Register", @Model.Register)
+    </div>
+</div>

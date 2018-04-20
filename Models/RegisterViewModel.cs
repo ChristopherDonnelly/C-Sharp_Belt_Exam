@@ -23,9 +23,11 @@ namespace C_Sharp_Belt.Models
         [EmailAddress(ErrorMessage="Please ensure that you have entered a valid email address!")]
         public string Email { get; set; }
  
+        //EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         [Display(Name = "Password: ")]
         [Required(ErrorMessage = "Password is required!")]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters!")]
+        [RegularExpression(@"^.*(?=.{8,})(?=.*\d)(?=.*[a-z]).*$", ErrorMessage = "Password must contain at least 1 number, 1 letter, and a special character!")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
  

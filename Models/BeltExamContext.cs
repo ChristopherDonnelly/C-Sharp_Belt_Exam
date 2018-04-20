@@ -8,8 +8,7 @@ namespace C_Sharp_Belt.Models
 
         public DbSet<User> users { get; set; }
 
-        // Update to references to Database tables
-        // public DbSet<WeddingPlan> weddingplan { get; set; }
-        // public DbSet<WeddingInfo> weddinginfo { get; set; }
+        public DbSet<Activities> activites { get; set; }
+        public DbSet<UserActivity> user_activity { get; set; }
     }
 }

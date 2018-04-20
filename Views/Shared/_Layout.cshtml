@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - C# Belt Exam</title>
+    <title>@ViewData["Title"] - Dojo Activity Center</title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -21,7 +21,7 @@
 <body>
     <div class="header">
         <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-            <a class="navbar-brand" href="/Dashboard">C# Belt Exam</a>
+            <a class="navbar-brand" href="/Dashboard">Dojo Activity Center</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -29,36 +29,23 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     @{ 
-                        if(@ViewData["Title"]=="Login"){
-                            <li class="nav-item active">
-                                <a class="nav-link" href="/">Login <span class="sr-only">(current)</span></a>
+                        if(@ViewData["Title"]=="Login/Registration"){
+                            <li class="nav-item">
+                                <a class="nav-link disabled text-white" href="#">Welcome to the Dojo Activity Center</a>
+                            </li>
+                        }else if(@ViewData["Title"]=="Home"){
+                            <li class="nav-item">
+                                <a class="nav-link disabled text-white" href="#">Welcome, @ViewData["Username"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/register">Register</a>
-                            </li>
-                        }else if(@ViewData["Title"]=="Register"){
-                            <li class="nav-item">
-                                <a class="nav-link" href="/">Login</a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link" href="/register">Register <span class="sr-only">(current)</span></a>
-                            </li>
-                        }else if(@ViewData["Title"]=="Belt"){
-                            <li class="nav-item">
-                                <a class="nav-link disabled text-white"" href="#">Welcome, @ViewData["Username"]</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Logoff">Log Out</a>
+                                <a class="nav-link" href="/Logoff">Log off</a>
                             </li>
                         }else{
                             <li class="nav-item">
-                                <a class="nav-link disabled text-white"" href="#">Welcome, @ViewData["Username"]</a>
+                                <a class="nav-link" href="/Home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/Dashboard">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Logoff">Log Out</a>
+                                <a class="nav-link" href="/Logoff">Log off</a>
                             </li>
                         }
                     }

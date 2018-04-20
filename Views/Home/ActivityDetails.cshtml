@@ -1,0 +1,47 @@
+﻿@model C_Sharp_Belt.Models.Activities
+@{
+    ViewData["Title"] = "Activity";
+}
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="col-5 d-inline-block">
+            <h1>@Model.Title</h1>
+        </div>
+        <div class="col-6 d-inline-block text-right">
+            @{
+                if(@Model.CreatedById == (int)ViewData["UserId"]){
+                    <a href="/Delete/@Model.ActivityId" class="btn btn-dark">Delete</a>
+                }else{
+                    <a href="/JoinLeave/@Model.ActivityId/ActivityDetails" class="btn btn-dark">
+                        @{
+                            bool joined = false;
+                            foreach(UserActivity user in @Model.JoinedUsers){
+                                if(user.JoinedUser.UserId == (int)ViewData["UserId"]){
+                                    joined = true;
+                                }
+                            }
+                            if(!joined){
+                                <span>Join</span>
+                            }else{
+                                <span>Leave</span>
+                            }
+                        }
+                    </a>
+                }
+            }
+        </div>
+        <h3 class="pl-3 py-3">Event Coordinator: @Model.CreatedBy.FirstName</h3>
+        <h5 class="pl-3 py-3">Description:</h5>
+        <p class="pl-5">@Model.Description</p>
+        <h6 class="pl-3 py-3">Participants:</h6>
+        @{
+            foreach(UserActivity user in @Model.JoinedUsers)
+            {
+                if(@user.JoinedUser.UserId != @Model.CreatedById){
+                    <p class="pl-5">@user.JoinedUser.FirstName</p>
+                }
+            }
+        }
+    </div>
+</div>

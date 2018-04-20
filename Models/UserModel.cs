@@ -12,14 +12,11 @@ namespace C_Sharp_Belt.Models
         public string Email { get; set; }
         public string Password { get; set; }
 
-
-        // Update to references to joined tables in DB - Many to Many relationship
-        // This specifically refers to a join table
-        // public List<WeddingPlan> Plans { get; set; }
+        public List<UserActivity> JoinedActivities { get; set; }
  
-        // public User()
-        // {
-        //     Plans = new List<WeddingPlan>();
-        // }
+        public User()
+        {
+            JoinedActivities = new List<UserActivity>();
+        }
     }
 }

@@ -27,3 +27,13 @@ textarea {
     height: 550px;
     overflow-y: auto;
 }
+
+th {
+    width: 16%;
+}
+td .btn.btn-dark {
+    width: 100%;
+}
+td~td .btn.btn-dark {
+    width: 90px;
+}

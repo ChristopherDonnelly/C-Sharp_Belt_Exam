@@ -19,8 +19,8 @@ namespace C_Sharp_Belt.Controllers
         public UserController(BeltExamContext context)
         {
             _context = context;
-            _controller = "Belt";
-            _action = "Belt";
+            _controller = "Home";
+            _action = "Home";
         }
 
         [HttpGet]
@@ -31,7 +31,7 @@ namespace C_Sharp_Belt.Controllers
             if(isLoggedIn()){
                 return RedirectToAction(_controller, _action);
             }else{
-                return View();
+                return View("LogReg", new LogRegBundleModel());
             }
         }
 
@@ -39,14 +39,14 @@ namespace C_Sharp_Belt.Controllers
         [Route("Login")]
         public IActionResult Login(LoginViewModel model)
         {
-			User user = _context.users.SingleOrDefault(u => u.Email == model.Email);
+			User user = _context.users.SingleOrDefault(u => u.Email == model.LoginEmail);
             model.Found = (user==null)?1:0;
 
             if(model.Found == 0){
-                if(model.Password==null) model.Password=" ";
+                if(model.LoginPassword==null) model.LoginPassword=" ";
 
                 var Hasher = new PasswordHasher<User>();
-                model.PasswordConfirmation = (Hasher.VerifyHashedPassword(user, user.Password, model.Password) != 0)?0:1;
+                model.LoginPasswordConfirmation = (Hasher.VerifyHashedPassword(user, user.Password, model.LoginPassword) != 0)?0:1;
             }
 
             TryValidateModel(model);
@@ -57,7 +57,7 @@ namespace C_Sharp_Belt.Controllers
                 return RedirectToAction(_controller, _action);
             }
 
-            return View("Login");
+            return View("LogReg", new LogRegBundleModel());
         }
 
         [HttpGet]
@@ -67,7 +67,7 @@ namespace C_Sharp_Belt.Controllers
             if(isLoggedIn()){
                 return RedirectToAction(_controller, _action);
             }else{
-                return View();
+                return View("LogReg", new LogRegBundleModel());
             }
         }
 
@@ -80,15 +80,13 @@ namespace C_Sharp_Belt.Controllers
                 model.Unique = _context.users.Count(u => u.Email == model.Email);
                 TryValidateModel(model);
 
-                if(!ModelState.IsValid){
-                    return View("Register");
-                }else{
+                if(ModelState.IsValid){
                     saveSession(model.createUser(_context));
                     return RedirectToAction(_controller, _action);
                 }
             }
 
-            return View("Register");
+            return View("LogReg", new LogRegBundleModel());
         }
 
         [HttpGet]
@@ -96,7 +94,7 @@ namespace C_Sharp_Belt.Controllers
         public IActionResult Logoff()
         {
             HttpContext.Session.Clear();
-            return View("Login");
+            return View("LogReg", new LogRegBundleModel());
         }
 
         public void saveSession(User user){

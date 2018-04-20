@@ -1,0 +1,53 @@
+﻿@model C_Sharp_Belt.Models.Activities
+@{
+    ViewData["Title"] = "New Activity";
+}
+
+<div class="row mt-5">
+    <h1 class="pb-5">Create an Activity!</h1>
+    <form asp-controller="Home" asp-action="CreateActivity" method="post" class="form-control pt-5 pb-4">
+        <input asp-for="CreatedById" type="hidden" />
+        <div class="col-5 d-inline-block align-top">
+            <div class="col-12 mb-3">
+                <label asp-for="Title" class="d-inline-block col-3 p-0 text-right"></label>
+            	<input asp-for="Title" class="form-control d-inline-block col-8 m-auto" placeholder="Enter Title" aria-label="Enter Title" />
+                <span asp-validation-for="Title" class="d-block pl-3 offset-3 text-danger"></span>
+            </div>
+            <div class="col-12 mb-3">
+                <label asp-for="EventDate" class="d-inline-block col-3 p-0 text-right"></label>
+            	<input asp-for="EventDate" class="form-control d-inline-block col-7 m-auto" placeholder="Enter Date" aria-label="Enter Date" />
+                <i class="material-icons align-middle">date_range</i>
+                <span asp-validation-for="EventDate" class="d-block pl-3 offset-3 text-danger"></span>
+            </div>
+        </div>
+        <div class="col-6 d-inline-block align-top">
+            <div class="col-12 text-right mb-3">
+                <label asp-for="EventTime" class="d-inline-block col-3 p-0 text-right"></label>
+            	<input asp-for="EventTime" class="form-control d-inline-block col-8 m-auto" placeholder="Enter Time" aria-label="Enter Time" type="time" />
+                <span asp-validation-for="EventTime" class="d-block pl-3 offset-3 text-danger"></span>
+            </div>
+            <div class="col-12 text-right mb-3">
+                <div class="col-7 d-inline-block">
+                    <label asp-for="Duration" class="d-inline-block col-3 p-0 text-right"></label>
+                    <input asp-for="Duration" class="form-control d-inline-block col-8 m-auto" placeholder="Enter Duration" aria-label="Enter Duration" />
+                </div>
+                <div class="col-4 d-inline-block text-right">
+                    <select asp-for="DurationLength" class="form-control d-inline-block m-auto text-right">
+                        <option value="Days">Days</option>
+                        <option value="Hours">Hours</option>
+                        <option value="Minutes">Minutes</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Duration" class="d-block pl-3 offset-3 text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 my-3">
+            <label asp-for="Description" class="d-inline-block col-3 p-0 text-right align-top"></label>
+            <textarea asp-for="Description" class="form-control d-inline-block col-8 m-auto" placeholder="Enter Description" aria-label="Enter Description"></textarea>
+            <span asp-validation-for="Description" class="d-block pl-3 offset-3 text-danger"></span>
+        </div>
+        <div class="col-12 text-right pr-5">
+            <button type="submit" class="btn btn-dark">Create Activity</button>
+        </div>
+    </form>
+</div>
