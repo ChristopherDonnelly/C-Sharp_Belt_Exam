@@ -1,4 +1,4 @@
-﻿@model C_Sharp_Belt.Models.Activities
+﻿@model C_Sharp_Belt.Models.UserActivityBundleModel
 @{
     ViewData["Title"] = "Activity";
 }
@@ -6,39 +6,37 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="col-5 d-inline-block">
-            <h1>@Model.Title</h1>
+            <h1>@Model.Activity.Title</h1>
         </div>
         <div class="col-6 d-inline-block text-right">
             @{
-                if(@Model.CreatedById == (int)ViewData["UserId"]){
-                    <a href="/Delete/@Model.ActivityId" class="btn btn-dark">Delete</a>
+                if(@Model.Activity.CreatedById == (int)ViewData["UserId"]){
+                    <a href="/Delete/@Model.Activity.ActivityId/ActivityDetails" class="btn btn-dark">Delete</a>
                 }else{
-                    <a href="/JoinLeave/@Model.ActivityId/ActivityDetails" class="btn btn-dark">
-                        @{
-                            bool joined = false;
-                            foreach(UserActivity user in @Model.JoinedUsers){
-                                if(user.JoinedUser.UserId == (int)ViewData["UserId"]){
-                                    joined = true;
+                    if(@Model.Activity.CanJoin(@Model.User)){
+                        <a href="/JoinLeave/@Model.Activity.ActivityId/ActivityDetails" class="btn btn-dark">
+                            @{
+                                if(@Model.Activity.HasJoined((int)@ViewData["UserId"])){
+                                    <span>Leave</span>
+                                }else{
+                                    <span>Join</span>
                                 }
                             }
-                            if(!joined){
-                                <span>Join</span>
-                            }else{
-                                <span>Leave</span>
-                            }
-                        }
-                    </a>
+                        </a>
+                    }else{
+                        <a href="#" class="btn btn-dark disabled">Conflict</a>
+                    }
                 }
             }
         </div>
-        <h3 class="pl-3 py-3">Event Coordinator: @Model.CreatedBy.FirstName</h3>
+        <h3 class="pl-3 py-3">Event Coordinator: @Model.Activity.CreatedBy.FirstName</h3>
         <h5 class="pl-3 py-3">Description:</h5>
-        <p class="pl-5">@Model.Description</p>
+        <p class="pl-5">@Model.Activity.Description</p>
         <h6 class="pl-3 py-3">Participants:</h6>
         @{
-            foreach(UserActivity user in @Model.JoinedUsers)
+            foreach(UserActivity user in @Model.Activity.JoinedUsers)
             {
-                if(@user.JoinedUser.UserId != @Model.CreatedById){
+                if(@user.JoinedUser.UserId != @Model.Activity.CreatedById){
                     <p class="pl-5">@user.JoinedUser.FirstName</p>
                 }
             }

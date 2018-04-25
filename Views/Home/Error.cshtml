@@ -1,0 +1,26 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error " + @Model.RequestId;
+}
+
+<div class="row mt-5 error">
+    <div class="col-12">
+        <h1 class="text-danger">Error.</h1>
+        <h2 class="text-danger">An error occurred while processing your request.</h2>
+
+        @if(Model.ShowRequestId)
+        {
+            <div class="form-control">
+                <h3><strong>Error:</strong> <code>@Model.RequestId</code></h3>
+
+                @if(@Model.RequestId == "404")
+                {
+                    <h4>Page Not Found!</h4>
+                    <p>The page you are looking for could not be found.  Click Home to return to the Home page.</p>
+                }
+
+                <p>Please contact the developer if you continue to experience any issues.</p>
+            </div>
+        }
+    </div>
+</div>

@@ -30,11 +30,12 @@ namespace C_Sharp_Belt.Controllers
             if(isLoggedIn()){
                 setSessionViewData();
 
-                List<Activities> activityInfo = _context.activites.Include( j => j.JoinedUsers ).Include( u => u.CreatedBy ).ToList();
-
-                return View(activityInfo);
+                User user = _context.users.Include( j => j.JoinedActivities ).ThenInclude( p => p.ActivityInfo ).SingleOrDefault(u => u.UserId == (int)ViewData["UserId"]);
+                List<Activities> activityInfo = _context.activites.Include( j => j.JoinedUsers ).Include( u => u.CreatedBy ).OrderBy( d => d.EventDate ).ToList();
+                
+                return View(new UserActivityBundleModel{ User = user, Activities = activityInfo });
             }else{
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }
         }
 
@@ -45,7 +46,7 @@ namespace C_Sharp_Belt.Controllers
             if(isLoggedIn()){
                 return View(new Activities());
             }else{
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }
         }
 
@@ -57,7 +58,11 @@ namespace C_Sharp_Belt.Controllers
                     setSessionViewData();
 
                     User user = _context.users.Include( j => j.JoinedActivities ).ThenInclude( p => p.ActivityInfo ).SingleOrDefault(u => u.UserId == (int)ViewData["UserId"]);
-                
+
+                    DateTime combined = activityInfo.EventDate.Date.Add(activityInfo.EventTime.TimeOfDay);
+
+                    activityInfo.EventDate = combined;
+                    activityInfo.EventTime = combined;
                     activityInfo.CreatedBy = user;
                     _context.activites.Add(activityInfo);
                     _context.user_activity.Add(new UserActivity{ ActivityId = activityInfo.ActivityId, ActivityInfo = activityInfo, JoinedUserId = user.UserId, JoinedUser = user });
@@ -66,7 +71,7 @@ namespace C_Sharp_Belt.Controllers
                     return RedirectToAction("ActivityDetails", new { ActivityId = activityInfo.ActivityId });
                 }
             }else{
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }
 
             return View("New", activityInfo);
@@ -78,37 +83,39 @@ namespace C_Sharp_Belt.Controllers
             if(isLoggedIn()){
                 setSessionViewData();
 
+                User user = _context.users.Include( j => j.JoinedActivities ).ThenInclude( p => p.ActivityInfo ).SingleOrDefault(u => u.UserId == (int)ViewData["UserId"]);
                 Activities activityInfo = _context.activites.Include( u => u.JoinedUsers ).ThenInclude( g => g.JoinedUser ).SingleOrDefault(u => u.ActivityId == ActivityId);
-            
-                foreach(UserActivity user in activityInfo.JoinedUsers){
-                    Console.WriteLine(user.JoinedUser.FirstName);
-                }
 
                 if(activityInfo != null){
-                    return View(activityInfo);
+                    return View(new UserActivityBundleModel{ Activity = activityInfo, User = user });
                 }else{
                     return RedirectToAction("Home");
                 }
             }else{
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }
         }
 
         [HttpGet]
-        [Route("Delete/{ActivityId}")]
-        public IActionResult Delete(int ActivityId){
+        [Route("Delete/{ActivityId}/{location}")]
+        public IActionResult Delete(int ActivityId, string location){
             if(isLoggedIn()){
+                setSessionViewData();
+
                 Activities activityInfo = _context.activites.SingleOrDefault(u => u.ActivityId == ActivityId);
 
                 if(activityInfo != null){
-                    _context.activites.Remove(activityInfo);
+                    if(activityInfo.CreatedById == (int)ViewData["UserId"]){
+                        _context.activites.Remove(activityInfo);   
+                        _context.SaveChanges();
+
+                        return RedirectToAction("Home");
+                    }
                 }
 
-                _context.SaveChanges();
-
-                return RedirectToAction("Home");
+                return RedirectToAction(location);
             }else{
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }
         }
 
@@ -116,19 +123,33 @@ namespace C_Sharp_Belt.Controllers
         [Route("JoinLeave/{ActivityId}/{location}")]
         public IActionResult JoinLeave(int ActivityId, string location)
         {
-            setSessionViewData();
+            if(isLoggedIn()){
+                setSessionViewData();
 
-            UserActivity userActivity = _context.user_activity.Where(p => p.ActivityId == ActivityId).SingleOrDefault(u => u.JoinedUserId == (int)ViewData["UserId"]);
+                UserActivity userActivity = _context.user_activity.Where(p => p.ActivityId == ActivityId).SingleOrDefault(u => u.JoinedUserId == (int)ViewData["UserId"]);
 
-            if(userActivity != null){
-                _context.user_activity.Remove(userActivity);
+                if(userActivity != null){
+                    _context.user_activity.Remove(userActivity);
+                }else{
+                    _context.user_activity.Add(new UserActivity{ ActivityId = ActivityId, JoinedUserId = (int)ViewData["UserId"] });
+                }
+
+                _context.SaveChanges();
+
+                return RedirectToAction(location);
             }else{
-                _context.user_activity.Add(new UserActivity{ ActivityId = ActivityId, JoinedUserId = (int)ViewData["UserId"] });
+                return RedirectToAction(_action, _controller);
             }
+        }
 
-            _context.SaveChanges();
-
-            return RedirectToAction(location);
+        [Route("{*url}")]
+        public IActionResult Error()
+        {
+            Response.StatusCode = 404;
+            
+            return View(new ErrorViewModel{
+                RequestId = "404"
+            });
         }
 
         private void setSessionViewData()

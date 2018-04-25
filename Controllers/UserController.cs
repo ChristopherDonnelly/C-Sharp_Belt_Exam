@@ -29,7 +29,7 @@ namespace C_Sharp_Belt.Controllers
         public IActionResult Login()
         {
             if(isLoggedIn()){
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }else{
                 return View("LogReg", new LogRegBundleModel());
             }
@@ -54,7 +54,7 @@ namespace C_Sharp_Belt.Controllers
             if(ModelState.IsValid)
             {
                 saveSession(user);
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }
 
             return View("LogReg", new LogRegBundleModel());
@@ -65,7 +65,7 @@ namespace C_Sharp_Belt.Controllers
         public IActionResult Register()
         {
             if(isLoggedIn()){
-                return RedirectToAction(_controller, _action);
+                return RedirectToAction(_action, _controller);
             }else{
                 return View("LogReg", new LogRegBundleModel());
             }
@@ -82,7 +82,7 @@ namespace C_Sharp_Belt.Controllers
 
                 if(ModelState.IsValid){
                     saveSession(model.createUser(_context));
-                    return RedirectToAction(_controller, _action);
+                    return RedirectToAction(_action, _controller);
                 }
             }
 

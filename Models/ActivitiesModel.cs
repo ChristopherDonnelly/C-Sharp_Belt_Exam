@@ -54,6 +54,57 @@ namespace C_Sharp_Belt.Models
         {
             JoinedUsers = new List<UserActivity>();
         }
+
+        public bool HasJoined(int userId){
+
+            bool joined = false;
+
+            foreach(UserActivity user in JoinedUsers){
+                // if(user.JoinedUser != null){
+                    if(user.JoinedUser.UserId == userId){
+                        joined = true;
+                    }
+                // }
+            }
+
+            return joined;
+        }
+
+        public bool CanJoin(User user){
+
+            bool canJoin = true;
+
+            DateTime eventEndDate = getEndDate(EventDate, Duration, DurationLength);
+            DateTime eventStartDate = EventDate;
+
+            foreach(UserActivity joinedActivity in user.JoinedActivities){
+                
+                DateTime joinedEndDate = getEndDate(joinedActivity.ActivityInfo.EventDate, joinedActivity.ActivityInfo.Duration, joinedActivity.ActivityInfo.DurationLength);
+                DateTime joinedStartDate = joinedActivity.ActivityInfo.EventDate;
+
+                if((eventStartDate > joinedStartDate && eventStartDate < joinedEndDate) || (eventEndDate > joinedStartDate && eventEndDate < joinedEndDate) || (eventStartDate < joinedStartDate && eventEndDate > joinedEndDate)){
+                    canJoin = false;
+                    break;
+                }
+                
+            }
+
+            return canJoin;
+        }
+
+        public DateTime getEndDate(DateTime activityEventDate, int activityDuration, string length){
+            DateTime endDate = new DateTime();
+
+            if(length == "Days"){
+                endDate = activityEventDate.AddDays(activityDuration);
+            }else if(length == "Hours"){
+                endDate = activityEventDate.AddHours(activityDuration);
+            }else if(length == "Minutes"){
+                endDate = activityEventDate.AddMinutes(activityDuration);
+            }
+
+            return endDate;
+        }
     }
 
     public class CurrentDateAttribute : ValidationAttribute

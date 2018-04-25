@@ -1,4 +1,4 @@
-﻿@model IEnumerable<C_Sharp_Belt.Models.Activities>
+﻿@model C_Sharp_Belt.Models.UserActivityBundleModel
 @{
     ViewData["Title"] = "Home";
 }
@@ -17,7 +17,7 @@
         </thead>
         <tbody>
             @{
-                foreach(Activities activity in @Model)
+                foreach(Activities activity in @Model.Activities)
                 {
                     if(@activity.EventDate > DateTime.Now){
                         <tr>
@@ -28,20 +28,22 @@
                             <td class="align-middle">@activity.JoinedUsers.Count</td>
                             @{
                                 if(activity.CreatedById == (int)ViewData["UserId"]){
-                                    <td class="align-middle text-center"><a href="/Delete/@activity.ActivityId" class="btn btn-dark">Delete</a></td>
+                                    <td class="align-middle text-center"><a href="/Delete/@activity.ActivityId/Home" class="btn btn-dark">Delete</a></td>
                                 }else{
                                     <td class="align-middle text-center">
                                         @{
-                                            bool joined = false;
-                                            foreach(UserActivity user in @activity.JoinedUsers){
-                                                if(user.JoinedUser.UserId == (int)ViewData["UserId"]){
-                                                    joined = true;
-                                                }
-                                            }
-                                            if(!joined){
-                                                <a href="/JoinLeave/@activity.ActivityId/Home" class="btn btn-dark">Join</a>
+                                            if(@activity.CanJoin(@Model.User)){
+                                                <a href="/JoinLeave/@activity.ActivityId/Home" class="btn btn-dark">
+                                                    @{
+                                                        if(@activity.HasJoined((int)@ViewData["UserId"])){
+                                                            <span>Leave</span>
+                                                        }else{
+                                                            <span>Join</span>
+                                                        }
+                                                    }
+                                                </a>
                                             }else{
-                                                <a href="/JoinLeave/@activity.ActivityId/Home" class="btn btn-dark">Leave</a>
+                                                <a href="#" class="btn btn-dark disabled">Conflict</a>
                                             }
                                         }
                                     </td>
